@@ -47,7 +47,7 @@ class PlayScene(Scene):
         # Spawn one task centered in ToDo zone
         todo_rect = self.board.rects["todo"]
         center = todo_rect.center
-        self.task = TaskCard(center, title="Task")
+        self.task = TaskCard(center) 
 
     def expected_zone_for_stage(self, stage):
         # Map stage to zone name
