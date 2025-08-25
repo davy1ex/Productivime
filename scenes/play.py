@@ -245,6 +245,15 @@ class PlayScene(Scene):
         # if self.errors >= MAX_ERRORS:
         #     self.manager.switch('game_over', reason="too_many_errors")
 
+    def finish_run(self, reason: str):
+        # Pack results into shared state
+        self.manager.state["time_spent"] = int(self.elapsed)
+        self.manager.state["delivered"] = self.delivered_count
+        self.manager.state["target"] = TARGET_N
+        self.manager.state["reason"] = reason
+        # score уже лежит в state
+        self.manager.switch('game_over', reason=reason)
+        
     def update(self, dt):
         self.elapsed += dt
         if self.grace_left > 0.0:
@@ -285,18 +294,18 @@ class PlayScene(Scene):
 
         # Win condition: delivered enough before time runs out
         if self.delivered_count >= TARGET_N:
-            self.manager.switch('game_over', reason="win")
+            self.finish_run("win")
             return
 
         # Lose condition: time limit exceeded without reaching target
         if self.elapsed >= TIME_LIMIT and self.delivered_count < TARGET_N:
-            self.manager.switch('game_over', reason="time_up")
+            self.finish_run("time_up")
             return
 
         # Lose condition: score depleted (safety check in case other code hasn't switched yet)
         if self.manager.state["score"] <= 0:
             self.manager.state["score"] = 0
-            self.manager.switch('game_over', reason="score_depleted")
+            self.finish_run("score_depleted")
             return
 
 
