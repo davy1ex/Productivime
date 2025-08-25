@@ -43,3 +43,24 @@ TASK_TEXT = (40, 45, 55)         # text color on card
 SCORE_TO_PROGRESS = 50
 SCORE_TO_DONE = 100
 PENALTY_SKIP_STAGE = 100
+
+
+# Distractors
+DISTRACTOR_WORDS = [
+    "прокрастинация", "сорванный дедлайн", "забыл позвонить",
+    "уведомления", "котики", "соцсети", "мессенджер", "зум-приглашение"
+]
+DISTRACTOR_COLOR = (230, 100, 140)  # readable on dark bg
+DISTRACTOR_MIN_SPEED = 120
+DISTRACTOR_MAX_SPEED = 220
+DISTRACTOR_SPAWN_INTERVAL = 2.2    # seconds (starts)
+DISTRACTOR_MIN_INTERVAL = 0.8      # cap difficulty
+DISTRACTOR_DIFFICULTY_STEP = 0.15  # every X seconds reduce interval
+DISTRACTOR_STEP_TIME = 25.0        # seconds between difficulty bumps
+
+# Penalties and limits
+PENALTY_HIT_DISTRACTOR = 50
+MAX_ERRORS = 3
+
+# Right-side spawn band (as fraction of width)
+RIGHT_BAND_X_FRAC = 0.62  # spawn distractors to the right from this screen fraction
