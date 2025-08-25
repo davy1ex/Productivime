@@ -8,12 +8,7 @@ from game.player import Player
 from game.task import TaskCard, Stage
 from game.obstacle import ObstacleTag
 
-from settings import (
-    SCORE_TO_PROGRESS, SCORE_TO_DONE, PENALTY_SKIP_STAGE, HUD_HEIGHT,
-    DISTRACTOR_WORDS, DISTRACTOR_COLOR, DISTRACTOR_MIN_SPEED, DISTRACTOR_MAX_SPEED,
-    DISTRACTOR_SPAWN_INTERVAL, DISTRACTOR_MIN_INTERVAL, DISTRACTOR_DIFFICULTY_STEP,
-    DISTRACTOR_STEP_TIME, PENALTY_HIT_DISTRACTOR, MAX_ERRORS, RIGHT_BAND_X_FRAC
-)
+from settings import *
 
 class PlayScene(Scene):
     def __init__(self, manager):
@@ -24,6 +19,8 @@ class PlayScene(Scene):
         self.elapsed = 0.0
         self.task = None
         self.pulse_t = 0.0  # for target zone highlight pulse
+
+        self.delivered_count = 0
 
         # pickup settings
         self.pickup_radius = 48  # px around ToDo center
@@ -65,6 +62,10 @@ class PlayScene(Scene):
         self.board = Board()
         self._respawn_requested = False
 
+        self.delivered_count = 0
+        self.elapsed = 0.0
+        self.manager.state["score"] = START_SCORE
+
         # Start player OUTSIDE the ToDo rect to avoid instant pickup/penalty
         todo_rect = self.board.rects["todo"]
         start_pos = (todo_rect.left - 40, todo_rect.centery)  # place slightly to the left
@@ -76,7 +77,6 @@ class PlayScene(Scene):
         self.player = Player(self.board, start_pos)
 
         self.elapsed = 0.0
-        self.manager.state["score"] = 0
         self.spawn_task_in_todo()
 
         # Reset distractors and timers
@@ -155,13 +155,12 @@ class PlayScene(Scene):
                 elif self.task.stage == Stage.DONE:
                     # Reached DONE from IN_PROGRESS
                     self.manager.state["score"] += SCORE_TO_DONE
-                    # 1) drop the card
                     self.task.carried = False
-                    # 2) place the card into Done center (visual confirmation)
                     done_rect = self.board.rects["done"]
                     self.task.set_center(done_rect.center)
-                    # 3) schedule respawn on next frame
+                    self.delivered_count += 1  # track delivered tasks
                     self._respawn_requested = True
+
         else:
             # Do NOT penalize if still in the origin zone for current stage.
             origin_zone = "todo" if self.task.stage == Stage.TODO else ("progress" if self.task.stage == Stage.IN_PROGRESS else None)
@@ -277,9 +276,29 @@ class PlayScene(Scene):
         # Update HUD
         self.hud.set_score(self.manager.state.get("score", 0))
         self.hud.update_timer(self.elapsed)
+        # expose delivered/target as string for HUD
+        self.hud.delivered_str = f"{self.delivered_count}/{TARGET_N}"
+
 
         # Pulse for expected-zone highlight
         self.pulse_t += dt
+
+        # Win condition: delivered enough before time runs out
+        if self.delivered_count >= TARGET_N:
+            self.manager.switch('game_over', reason="win")
+            return
+
+        # Lose condition: time limit exceeded without reaching target
+        if self.elapsed >= TIME_LIMIT and self.delivered_count < TARGET_N:
+            self.manager.switch('game_over', reason="time_up")
+            return
+
+        # Lose condition: score depleted (safety check in case other code hasn't switched yet)
+        if self.manager.state["score"] <= 0:
+            self.manager.state["score"] = 0
+            self.manager.switch('game_over', reason="score_depleted")
+            return
+
 
         # Respawn new task if previous delivered (next frame)
         if self._respawn_requested:

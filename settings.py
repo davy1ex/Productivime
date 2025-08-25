@@ -1,3 +1,8 @@
+# Run parameters
+TIME_LIMIT = 120           # seconds to finish the run
+TARGET_N = 10              # how many tasks to deliver to win
+START_SCORE = 300          # starting score buffer
+
 WIDTH, HEIGHT = 900, 600
 FPS = 60
 TITLE = "Productivime"

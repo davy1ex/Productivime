@@ -1,5 +1,5 @@
 import pygame as pg
-from settings import FG_COLOR
+from settings import FG_COLOR, TIME_LIMIT
 
 class HUD:
     def __init__(self):
@@ -15,6 +15,13 @@ class HUD:
         self.timer = t
 
     def draw(self, surf):
+        remain = max(0, int(TIME_LIMIT - self.timer))
+        parts = [
+            f"Время: {remain}s",
+            f"Очки: {self.score}",
+            f"Цель: {getattr(self, 'delivered_str', '')}"
+        ]
+
         tsec = int(self.timer)
         parts = [
             f"Время: {tsec}s",
