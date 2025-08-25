@@ -4,3 +4,29 @@ TITLE = "Productivime"
 BG_COLOR = (18, 18, 22)
 FG_COLOR = (230, 230, 240)
 ACCENT = (90, 130, 255)
+
+HUD_HEIGHT = 60
+
+# board
+BOARD_MARGIN = 20
+ZONE_BORDER = (70, 80, 110)
+ZONE_FILL = (28, 30, 38)
+ZONE_TITLE = (180, 190, 210)
+
+# player
+PLAYER_SIZE = (36, 36)
+PLAYER_COLOR = (120, 200, 255)
+PLAYER_SPEED = 260  # px/s
+
+# Colors
+ZONE_TODO_FILL = (255, 216, 168)   # #FFD8A8 — soft orange
+ZONE_PROGRESS_FILL = (167, 197, 235)  # #A7C5EB — soft blue
+ZONE_DONE_FILL = (183, 228, 199)   # #B7E4C7 — soft green
+
+# Borders
+ZONE_TODO_BORDER = (236, 190, 140)
+ZONE_PROGRESS_BORDER = (146, 175, 214)
+ZONE_DONE_BORDER = (160, 205, 180)
+
+# Color titles
+ZONE_TITLE = (40, 45, 55)
