@@ -1,0 +1,6 @@
+WIDTH, HEIGHT = 900, 600
+FPS = 60
+TITLE = "Productivime"
+BG_COLOR = (18, 18, 22)
+FG_COLOR = (230, 230, 240)
+ACCENT = (90, 130, 255)
