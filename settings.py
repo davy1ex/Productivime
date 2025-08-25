@@ -30,3 +30,16 @@ ZONE_DONE_BORDER = (160, 205, 180)
 
 # Color titles
 ZONE_TITLE = (40, 45, 55)
+
+
+
+# Task card
+TASK_SIZE = (120, 60)            # width x height of a task card
+TASK_COLOR = (245, 245, 250)     # light card face
+TASK_BORDER = (120, 125, 140)    # subtle border
+TASK_TEXT = (40, 45, 55)         # text color on card
+
+# Scoring
+SCORE_TO_PROGRESS = 50
+SCORE_TO_DONE = 100
+PENALTY_SKIP_STAGE = 100

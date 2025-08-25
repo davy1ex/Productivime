@@ -60,3 +60,17 @@ class Board:
             if r.collidepoint(pos):
                 return name
         return None
+
+    def highlight_zone(self, surf, zone_name, intensity=1.0):
+        """
+        Draw a subtle highlight overlay on the expected zone.
+        intensity in [0..1] to modulate alpha.
+        """
+        r = self.rects.get(zone_name)
+        if not r:
+            return
+        # soft white overlay with low alpha for 'comic pastel' feel
+        overlay = pg.Surface((r.width, r.height), pg.SRCALPHA)
+        alpha = int(40 * max(0.0, min(1.0, intensity)))  # 0..40
+        overlay.fill((255, 255, 255, alpha))
+        surf.blit(overlay, r.topleft)
